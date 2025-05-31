@@ -1,0 +1,168 @@
+<%- include('partials/head', { title: 'Login' }) %>
+<%- include('partials/navbar') %>
+
+<div class="container">
+    <%- include('partials/messages') %>
+    
+    <div class="card" style="max-width: 400px; margin: 2rem auto;">
+        <h2 style="text-align: center; margin-bottom: 2rem; color: #667eea;">
+            <i class="fas fa-sign-in-alt"></i> Entrar
+        </h2>
+        
+        <form action="/login" method="POST" id="loginForm">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="senha">Senha:</label>
+                <input type="password" id="senha" name="senha" required>
+            </div>
+            
+            <button type="submit" class="btn" style="width: 100%; margin-bottom: 1rem;" id="submitBtn">
+                <i class="fas fa-sign-in-alt"></i> Entrar
+            </button>
+        </form>
+        
+        <p style="text-align: center;">
+            Não tem uma conta? <a href="/cadastro" style="color: #667eea;">Cadastre-se</a>
+        </p>
+        
+        <!-- DEBUG INFO -->
+        <div id="debugInfo" style="margin-top: 2rem; padding: 1rem; background: #f3f4f6; border-radius: 8px; font-size: 0.8rem; display: none;">
+            <strong>🔍 Debug Info:</strong><br>
+            <div id="debugText"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Sistema de login iniciado');
+    
+    const form = document.getElementById('loginForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const emailField = document.getElementById('email');
+    const senhaField = document.getElementById('senha');
+    const debugInfo = document.getElementById('debugInfo');
+    const debugText = document.getElementById('debugText');
+
+    // Mostrar debug info
+    debugInfo.style.display = 'block';
+    
+    function updateDebug(msg) {
+        console.log(msg);
+        debugText.innerHTML += msg + '<br>';
+    }
+
+    // Adicionar estilos básicos
+    const style = document.createElement('style');
+    style.textContent = `
+        .btn-loading {
+            position: relative;
+            color: transparent !important;
+        }
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            top: 50%;
+            left: 50%;
+            margin-left: -8px;
+            margin-top: -8px;
+            border: 2px solid white;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Carregar email salvo
+    const emailSalvo = localStorage.getItem('ultimoEmail');
+    if (emailSalvo) {
+        emailField.value = emailSalvo;
+        updateDebug('📧 Email carregado do localStorage: ' + emailSalvo);
+        senhaField.focus();
+    }
+
+    // Debug das mensagens na página
+    const mensagens = document.querySelectorAll('.alert-error, .message.error, .alert-success, .message.success');
+    if (mensagens.length > 0) {
+        mensagens.forEach(msg => {
+            const texto = msg.textContent.trim();
+            updateDebug('💬 Mensagem na página: ' + texto);
+            
+            if (texto.includes('incorreto') || texto.includes('verificar')) {
+                updateDebug('❌ Erro de login detectado');
+                
+                // Remover loading se houver erro
+                submitBtn.classList.remove('btn-loading');
+                submitBtn.disabled = false;
+                
+                // Focar no email
+                emailField.focus();
+                emailField.select();
+            }
+        });
+    } else {
+        updateDebug('📭 Nenhuma mensagem encontrada na página');
+    }
+
+    // Enter para submeter
+    [emailField, senhaField].forEach(campo => {
+        campo.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                updateDebug('⌨️ Enter pressionado no campo: ' + campo.id);
+                form.submit();
+            }
+        });
+    });
+
+    // Interceptar envio do formulário
+    form.addEventListener('submit', function(e) {
+        updateDebug('📤 Formulário sendo enviado...');
+        updateDebug('✉️ Email: ' + emailField.value);
+        updateDebug('🔑 Senha: ' + (senhaField.value ? '[' + senhaField.value.length + ' caracteres]' : '[VAZIA]'));
+        updateDebug('🌐 Action: ' + form.action);
+        updateDebug('📋 Method: ' + form.method);
+        
+        // Salvar email
+        if (emailField.value.trim()) {
+            localStorage.setItem('ultimoEmail', emailField.value.trim());
+            updateDebug('💾 Email salvo no localStorage');
+        }
+        
+        // Mostrar loading
+        submitBtn.classList.add('btn-loading');
+        submitBtn.disabled = true;
+        updateDebug('⏳ Loading ativado');
+        
+        // NÃO fazer preventDefault - deixar enviar naturalmente
+        updateDebug('🚀 Enviando formulário para o servidor...');
+    });
+
+    // Função de debug global
+    window.debugLogin = function() {
+        const info = {
+            email: emailField.value,
+            senha: senhaField.value ? '[PREENCHIDA]' : '[VAZIA]',
+            formAction: form.action,
+            method: form.method,
+            sessionStorage: sessionStorage.length + ' itens',
+            localStorage: localStorage.length + ' itens'
+        };
+        console.table(info);
+        return info;
+    };
+
+    updateDebug('✅ Sistema inicializado - digite debugLogin() no console para mais info');
+});
+</script>
+
+<%- include('partials/footer') %>

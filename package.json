@@ -1,0 +1,29 @@
+{
+  "name": "plataforma-noticias",
+  "version": "1.0.0",
+  "description": "Plataforma de notícias com sistema de usuários",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "crypto": "^1.0.1",
+    "crypto-js": "^4.2.0",
+    "dotenv": "^16.5.0",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-flash": "^0.0.2",
+    "express-rate-limit": "^7.5.0",
+    "express-session": "^1.18.1",
+    "helmet": "^8.1.0",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.14.1",
+    "nodemailer": "^6.10.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}

@@ -1,0 +1,415 @@
+<%- include('partials/head', { title: 'Meu Perfil' }) %>
+<%- include('partials/navbar') %>
+
+<div class="container">
+    <%- include('partials/messages') %>
+    
+    <!-- Header do Perfil -->
+    <div class="card animate-fade-in" style="margin-bottom: 2rem; text-align: center; background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));">
+        <div style="position: relative; display: inline-block; margin-bottom: 1.5rem;">
+            <!-- Foto de Perfil -->
+            <div style="position: relative; display: inline-block;">
+                <% if (user && user.foto_perfil) { %>
+                    <img src="<%= user.foto_perfil %>" alt="Foto de perfil" id="profileImage"
+                         style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid #6366f1; box-shadow: 0 8px 32px rgba(99, 102, 241, 0.3);">
+                <% } else { %>
+                    <div id="profileImage" style="width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, #6366f1, #8b5cf6); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem; border: 4px solid #6366f1; box-shadow: 0 8px 32px rgba(99, 102, 241, 0.3);">
+                        <i class="fas fa-user"></i>
+                    </div>
+                <% } %>
+                
+                <!-- Botão para trocar foto -->
+                <button onclick="document.getElementById('foto-input').click()" style="
+                    position: absolute;
+                    bottom: 0;
+                    right: 0;
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    background: #10b981;
+                    color: white;
+                    border: 3px solid white;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 1.2rem;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+                "
+                onmouseover="this.style.transform='scale(1.1)'; this.style.background='#059669'"
+                onmouseout="this.style.transform='scale(1)'; this.style.background='#10b981'">
+                    <i class="fas fa-camera"></i>
+                </button>
+            </div>
+        </div>
+        
+        <h2 style="color: #1f2937; margin: 0 0 0.5rem 0; font-family: 'Playfair Display', serif; font-size: 2rem;">
+            <%= user ? user.nome : 'Usuário' %>
+        </h2>
+        <p style="color: #6b7280; margin: 0; font-size: 1.1rem;">
+            <%= user ? user.email : 'email@exemplo.com' %>
+        </p>
+        
+        <!-- Form oculto para upload de foto -->
+        <form action="/upload-foto" method="POST" enctype="multipart/form-data" style="display: none;">
+            <input type="file" id="foto-input" name="foto" accept="image/*" onchange="this.form.submit()">
+        </form>
+    </div>
+    
+    <!-- Navegação por Abas -->
+    <div style="margin-bottom: 2rem;">
+        <div style="display: flex; gap: 0.5rem; background: white; padding: 0.5rem; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <button class="tab-btn active" data-tab="dados" style="
+                flex: 1; padding: 12px; border: none; border-radius: 8px; background: #6366f1; color: white; font-weight: 600; cursor: pointer; transition: all 0.3s ease;
+            ">
+                <i class="fas fa-user"></i> Dados Pessoais
+            </button>
+            <button class="tab-btn" data-tab="categorias" style="
+                flex: 1; padding: 12px; border: none; border-radius: 8px; background: transparent; color: #6b7280; font-weight: 600; cursor: pointer; transition: all 0.3s ease;
+            ">
+                <i class="fas fa-tags"></i> Categorias
+            </button>
+            <button class="tab-btn" data-tab="seguranca" style="
+                flex: 1; padding: 12px; border: none; border-radius: 8px; background: transparent; color: #6b7280; font-weight: 600; cursor: pointer; transition: all 0.3s ease;
+            ">
+                <i class="fas fa-shield-alt"></i> Segurança
+            </button>
+        </div>
+    </div>
+    
+    <!-- Aba: Dados Pessoais -->
+    <div id="tab-dados" class="tab-content active">
+        <div class="card">
+            <h3 style="margin-bottom: 2rem; color: #1f2937; font-family: 'Playfair Display', serif;">
+                <i class="fas fa-user-edit"></i> Editar Dados Pessoais
+            </h3>
+            
+            <form action="/atualizar-perfil" method="POST">
+                <div style="display: grid; gap: 1.5rem;">
+                    <div class="form-group">
+                        <label for="nome" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #374151;">
+                            <i class="fas fa-user" style="margin-right: 0.5rem; color: #6366f1;"></i>
+                            Nome Completo
+                        </label>
+                        <input type="text" id="nome" name="nome" required 
+                               value="<%= user ? user.nome : '' %>"
+                               placeholder="Seu nome completo"
+                               style="width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem; transition: border-color 0.3s ease;"
+                               onfocus="this.style.borderColor='#6366f1'"
+                               onblur="this.style.borderColor='#e5e7eb'">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #374151;">
+                            <i class="fas fa-envelope" style="margin-right: 0.5rem; color: #6366f1;"></i>
+                            Email
+                        </label>
+                        <input type="email" id="email" name="email" readonly
+                               value="<%= user ? user.email : '' %>"
+                               style="width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem; background: #f9fafb; color: #6b7280;">
+                        <small style="color: #6b7280; font-size: 0.875rem;">
+                            <i class="fas fa-info-circle"></i> O email não pode ser alterado
+                        </small>
+                    </div>
+                    
+                    <button type="submit" style="
+                        padding: 12px 24px; 
+                        background: linear-gradient(135deg, #6366f1, #8b5cf6); 
+                        color: white; 
+                        border: none; 
+                        border-radius: 8px; 
+                        font-weight: 600; 
+                        cursor: pointer; 
+                        transition: all 0.3s ease;
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                        justify-content: center;
+                    "
+                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(99, 102, 241, 0.4)'"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                        <i class="fas fa-save"></i>
+                        Salvar Alterações
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Aba: Categorias -->
+    <div id="tab-categorias" class="tab-content" style="display: none;">
+        <div class="card">
+            <h3 style="margin-bottom: 2rem; color: #1f2937; font-family: 'Playfair Display', serif;">
+                <i class="fas fa-tags"></i> Minhas Categorias de Interesse
+            </h3>
+            
+            <p style="color: #6b7280; margin-bottom: 2rem;">
+                Selecione as categorias que mais te interessam para receber notícias personalizadas.
+            </p>
+            
+            <form action="/atualizar-categorias" method="POST">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                    <% if (typeof categorias !== 'undefined' && categorias) { %>
+                        <% categorias.forEach(function(categoria) { %>
+                            <div style="position: relative;">
+                                <input type="checkbox" 
+                                       id="categoria_<%= categoria.id %>" 
+                                       name="categorias" 
+                                       value="<%= categoria.id %>"
+                                       <%= categoria.selecionada ? 'checked' : '' %>
+                                       style="position: absolute; opacity: 0;">
+                                <label for="categoria_<%= categoria.id %>" style="
+                                    display: block;
+                                    padding: 1rem;
+                                    border: 2px solid <%= categoria.selecionada ? categoria.cor : '#e5e7eb' %>;
+                                    border-radius: 12px;
+                                    cursor: pointer;
+                                    transition: all 0.3s ease;
+                                    background: <%= categoria.selecionada ? categoria.cor + '15' : 'white' %>;
+                                    text-align: center;
+                                ">
+                                    <span style="font-size: 1.5rem; color: <%= categoria.cor %>; display: block; margin-bottom: 0.5rem;">
+                                        <%= categoria.icone %>
+                                    </span>
+                                    <div style="font-weight: 600; font-size: 0.9rem; color: #1f2937;">
+                                        <%= categoria.nome %>
+                                    </div>
+                                </label>
+                            </div>
+                        <% }); %>
+                    <% } %>
+                </div>
+                
+                <div style="text-align: center;">
+                    <span id="selectedCount" style="color: #6b7280; margin-bottom: 1rem; display: block;">
+                        0 categoria(s) selecionada(s)
+                    </span>
+                    <button type="submit" style="
+                        padding: 12px 24px; 
+                        background: linear-gradient(135deg, #10b981, #059669); 
+                        color: white; 
+                        border: none; 
+                        border-radius: 8px; 
+                        font-weight: 600; 
+                        cursor: pointer; 
+                        transition: all 0.3s ease;
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                    "
+                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(16, 185, 129, 0.4)'"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                        <i class="fas fa-check"></i>
+                        Atualizar Categorias
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Aba: Segurança -->
+    <div id="tab-seguranca" class="tab-content" style="display: none;">
+        <div class="card">
+            <h3 style="margin-bottom: 2rem; color: #1f2937; font-family: 'Playfair Display', serif;">
+                <i class="fas fa-shield-alt"></i> Segurança da Conta
+            </h3>
+            
+            <div style="display: grid; gap: 2rem;">
+                <!-- Alterar Senha -->
+                <div style="padding: 1.5rem; background: #f8fafc; border-radius: 12px; border-left: 4px solid #6366f1;">
+                    <h4 style="color: #1f2937; margin-bottom: 1rem;">
+                        <i class="fas fa-key"></i> Alterar Senha
+                    </h4>
+                    <p style="color: #6b7280; margin-bottom: 1.5rem;">
+                        Para sua segurança, recomendamos alterar sua senha periodicamente.
+                    </p>
+                    <form action="/alterar-senha" method="POST">
+                        <div style="display: grid; gap: 1rem;">
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #374151;">
+                                    Senha Atual
+                                </label>
+                                <input type="password" name="senhaAtual" required
+                                       placeholder="Digite sua senha atual"
+                                       style="width: 100%; padding: 10px 12px; border: 2px solid #e5e7eb; border-radius: 6px;">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #374151;">
+                                    Nova Senha
+                                </label>
+                                <input type="password" name="novaSenha" required minlength="6"
+                                       placeholder="Digite sua nova senha"
+                                       style="width: 100%; padding: 10px 12px; border: 2px solid #e5e7eb; border-radius: 6px;">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #374151;">
+                                    Confirmar Nova Senha
+                                </label>
+                                <input type="password" name="confirmarSenha" required minlength="6"
+                                       placeholder="Confirme sua nova senha"
+                                       style="width: 100%; padding: 10px 12px; border: 2px solid #e5e7eb; border-radius: 6px;">
+                            </div>
+                            <button type="submit" style="
+                                padding: 10px 20px; 
+                                background: #ef4444; 
+                                color: white; 
+                                border: none; 
+                                border-radius: 6px; 
+                                font-weight: 600; 
+                                cursor: pointer;
+                                transition: all 0.3s ease;
+                            "
+                            onmouseover="this.style.background='#dc2626'"
+                            onmouseout="this.style.background='#ef4444'">
+                                <i class="fas fa-lock"></i> Alterar Senha
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Informações da Conta -->
+                <div style="padding: 1.5rem; background: #f0fdf4; border-radius: 12px; border-left: 4px solid #10b981;">
+                    <h4 style="color: #1f2937; margin-bottom: 1rem;">
+                        <i class="fas fa-info-circle"></i> Informações da Conta
+                    </h4>
+                    <div style="display: grid; gap: 0.5rem; color: #6b7280;">
+                        <p><strong>Cadastrado em:</strong> <%= user ? new Date(user.criado_em || Date.now()).toLocaleDateString('pt-BR') : 'N/A' %></p>
+                        <p><strong>Último acesso:</strong> <%= new Date().toLocaleDateString('pt-BR') %></p>
+                        <p><strong>Status da conta:</strong> <span style="color: #10b981; font-weight: 600;">✅ Verificada</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Botão de Voltar -->
+    <div style="text-align: center; margin-top: 2rem;">
+        <a href="/dashboard" style="
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 12px 24px;
+            background: white;
+            color: #6366f1;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            border: 2px solid #6366f1;
+            transition: all 0.3s ease;
+        "
+        onmouseover="this.style.background='#6366f1'; this.style.color='white'"
+        onmouseout="this.style.background='white'; this.style.color='#6366f1'">
+            <i class="fas fa-arrow-left"></i>
+            Voltar ao Dashboard
+        </a>
+    </div>
+</div>
+
+<!-- JavaScript para as abas e funcionalidades -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('👤 Página de perfil carregada');
+    
+    // Sistema de abas
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const tabId = this.getAttribute('data-tab');
+            
+            // Remover classe active de todos os botões e conteúdos
+            tabBtns.forEach(b => {
+                b.classList.remove('active');
+                b.style.background = 'transparent';
+                b.style.color = '#6b7280';
+            });
+            
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+                content.style.display = 'none';
+            });
+            
+            // Ativar aba clicada
+            this.classList.add('active');
+            this.style.background = '#6366f1';
+            this.style.color = 'white';
+            
+            const targetContent = document.getElementById('tab-' + tabId);
+            if (targetContent) {
+                targetContent.classList.add('active');
+                targetContent.style.display = 'block';
+            }
+            
+            console.log('📑 Aba ativada:', tabId);
+        });
+    });
+    
+    // Contador de categorias selecionadas
+    const categoryCheckboxes = document.querySelectorAll('input[name="categorias"]');
+    const selectedCount = document.getElementById('selectedCount');
+    
+    function updateCategoryCount() {
+        const selected = document.querySelectorAll('input[name="categorias"]:checked').length;
+        if (selectedCount) {
+            selectedCount.textContent = selected + ' categoria(s) selecionada(s)';
+        }
+        console.log('📊 Categorias selecionadas:', selected);
+    }
+    
+    categoryCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const label = this.nextElementSibling;
+            const categoria = this.closest('div').querySelector('span');
+            const cor = categoria ? categoria.style.color : '#6366f1';
+            
+            if (this.checked) {
+                label.style.borderColor = cor;
+                label.style.background = cor + '15';
+                console.log('✅ Categoria selecionada:', this.value);
+            } else {
+                label.style.borderColor = '#e5e7eb';
+                label.style.background = 'white';
+                console.log('❌ Categoria desmarcada:', this.value);
+            }
+            
+            updateCategoryCount();
+        });
+    });
+    
+    // Atualizar contador inicial
+    updateCategoryCount();
+    
+    // Preview da foto de perfil
+    const fotoInput = document.getElementById('foto-input');
+    if (fotoInput) {
+        fotoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const profileImage = document.getElementById('profileImage');
+                    if (profileImage.tagName === 'IMG') {
+                        profileImage.src = e.target.result;
+                    } else {
+                        // Converter div para img
+                        const newImg = document.createElement('img');
+                        newImg.src = e.target.result;
+                        newImg.id = 'profileImage';
+                        newImg.style.cssText = profileImage.style.cssText;
+                        newImg.style.objectFit = 'cover';
+                        profileImage.parentNode.replaceChild(newImg, profileImage);
+                    }
+                    console.log('📸 Foto de perfil atualizada');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+    
+    console.log('✅ Sistema de perfil inicializado');
+});
+</script>
+
+<%- include('partials/footer') %>

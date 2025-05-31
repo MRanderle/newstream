@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selecionar Categorias - Portal de Notícias</title>
+    
+    <!-- Fontes -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --text-primary: #1f2937;
+            --text-muted: #9ca3af;
+            --border-color: #e5e7eb;
+            --primary-gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .category-item {
+            position: relative;
+        }
+
+        .category-item input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .category-label {
+            display: block;
+            padding: 1.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            text-align: center;
+        }
+
+        .category-label:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.15);
+        }
+
+        .category-item input[type="checkbox"]:checked + .category-label {
+            border-color: var(--primary-color);
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.2);
+        }
+
+        .category-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .category-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .category-description {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px -12px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .form-actions {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .selection-counter {
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .message {
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .message.error {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .card {
+                padding: 2rem 1.5rem;
+            }
+            
+            .header h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <!-- Mensagens de feedback -->
+            <% if (typeof messages !== 'undefined' && messages) { %>
+                <% if (messages.error && messages.error.length > 0) { %>
+                    <% messages.error.forEach(function(message) { %>
+                        <div class="message error">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span><%= message %></span>
+                        </div>
+                    <% }); %>
+                <% } %>
+            <% } %>
+
+            <div class="header">
+                <h2>Escolha suas categorias</h2>
+                <p>Selecione os temas que mais te interessam para receber notícias personalizadas</p>
+            </div>
+
+            <form action="/selecionar-categorias" method="POST" id="categoriesForm">
+                <div class="selection-counter">
+                    <span id="selectedCount">0</span> categoria(s) selecionada(s)
+                </div>
+
+                <div class="categories-grid">
+                    <% categorias.forEach(function(categoria) { %>
+                        <div class="category-item">
+                            <input 
+                                type="checkbox" 
+                                id="categoria_<%= categoria.id %>" 
+                                name="categorias" 
+                                value="<%= categoria.id %>"
+                                class="category-checkbox"
+                            >
+                            <label for="categoria_<%= categoria.id %>" class="category-label">
+                                <span class="category-icon" style="color: <%= categoria.cor %>;">
+                                    <%= categoria.icone %>
+                                </span>
+                                <div class="category-name"><%= categoria.nome %></div>
+                                <div class="category-description"><%= categoria.descricao %></div>
+                            </label>
+                        </div>
+                    <% }); %>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" id="submitBtn" disabled>
+                        <i class="fas fa-check"></i>
+                        Confirmar Seleção
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkboxes = document.querySelectorAll('.category-checkbox');
+            const selectedCount = document.getElementById('selectedCount');
+            const submitBtn = document.getElementById('submitBtn');
+
+            function updateCounter() {
+                const checked = document.querySelectorAll('.category-checkbox:checked').length;
+                selectedCount.textContent = checked;
+                
+                // Habilitar/desabilitar botão
+                if (checked > 0) {
+                    submitBtn.disabled = false;
+                    submitBtn.style.opacity = '1';
+                } else {
+                    submitBtn.disabled = true;
+                    submitBtn.style.opacity = '0.5';
+                }
+            }
+
+            // Adicionar evento para todos os checkboxes
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateCounter);
+            });
+
+            // Verificar inicial
+            updateCounter();
+
+            // Adicionar animação aos cards
+            const categoryItems = document.querySelectorAll('.category-item');
+            categoryItems.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    item.style.transition = 'all 0.5s ease';
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>

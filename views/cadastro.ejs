@@ -1,0 +1,372 @@
+<%- include('partials/head', { title: 'Cadastro' }) %>
+<%- include('partials/navbar') %>
+
+<div class="container">
+    <%- include('partials/messages') %>
+    
+    <div class="card animate-fade-in" style="max-width: 450px; margin: 3rem auto; background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(240,248,255,0.95));">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <div style="width: 80px; height: 80px; background: var(--secondary-gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white; font-size: 2rem; box-shadow: var(--shadow-lg);">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <h2 style="color: var(--text-primary); margin: 0; font-family: 'Playfair Display', serif; font-size: 2rem;">
+                Criar Conta
+            </h2>
+            <p style="color: var(--text-muted); margin-top: 0.5rem;">
+                Junte-se à nossa comunidade de leitores
+            </p>
+        </div>
+        
+        <form action="/cadastro" method="POST" style="margin-top: 2rem;">
+            <div class="form-group">
+                <label for="nome">
+                    <i class="fas fa-user" style="margin-right: 0.5rem; color: var(--primary-color);"></i>
+                    Nome Completo
+                </label>
+                <input type="text" id="nome" name="nome" required placeholder="Seu nome completo">
+            </div>
+            
+            <div class="form-group">
+                <label for="email">
+                    <i class="fas fa-envelope" style="margin-right: 0.5rem; color: var(--primary-color);"></i>
+                    Email
+                </label>
+                <input type="email" id="email" name="email" required placeholder="seu@email.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="senha">
+                    <i class="fas fa-lock" style="margin-right: 0.5rem; color: var(--primary-color);"></i>
+                    Senha
+                </label>
+                <input type="password" id="senha" name="senha" required minlength="6" placeholder="Mínimo 6 caracteres">
+            </div>
+            
+            <div class="form-group">
+                <label for="confirmarSenha">
+                    <i class="fas fa-lock" style="margin-right: 0.5rem; color: var(--primary-color);"></i>
+                    Confirmar Senha
+                </label>
+                <input type="password" id="confirmarSenha" name="confirmarSenha" required minlength="6" placeholder="Confirme sua senha">
+            </div>
+            
+            <button type="submit" class="btn btn-secondary" style="width: 100%; margin-bottom: 1.5rem; padding: 16px;">
+                <i class="fas fa-user-plus"></i>
+                Criar Minha Conta
+            </button>
+        </form>
+        
+        <div style="text-align: center; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+            <p style="color: var(--text-muted);">
+                Já tem uma conta? 
+                <a href="/login" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">
+                    Faça login
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Adicione este script antes do fechamento do </body> em sua página de cadastro -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Elementos do formulário
+    const form = document.querySelector('form[action="/cadastro"]');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    
+    const campos = {
+        nome: document.getElementById('nome'),
+        email: document.getElementById('email'),
+        senha: document.getElementById('senha'),
+        confirmarSenha: document.getElementById('confirmarSenha')
+    };
+
+    // Adicionar estilos de feedback (sem alterar CSS existente)
+    const style = document.createElement('style');
+    style.textContent = `
+        .campo-valido {
+            border-color: #10b981 !important;
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.1) !important;
+        }
+        .campo-invalido {
+            border-color: #ef4444 !important;
+            box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.1) !important;
+        }
+        .feedback-msg {
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        .feedback-sucesso {
+            color: #10b981;
+        }
+        .feedback-erro {
+            color: #ef4444;
+        }
+        .btn-carregando {
+            position: relative;
+            color: transparent !important;
+        }
+        .btn-carregando::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin-left: -10px;
+            margin-top: -10px;
+            border: 2px solid transparent;
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s ease infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .senha-forca {
+            height: 4px;
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        .forca-fraca { background: #ef4444; width: 33%; }
+        .forca-media { background: #f59e0b; width: 66%; }
+        .forca-forte { background: #10b981; width: 100%; }
+    `;
+    document.head.appendChild(style);
+
+    // Função para criar mensagem de feedback
+    function criarFeedback(campo, tipo, mensagem) {
+        // Remover feedback existente
+        const feedbackExistente = campo.parentNode.querySelector('.feedback-msg');
+        if (feedbackExistente) {
+            feedbackExistente.remove();
+        }
+
+        // Criar novo feedback
+        const feedback = document.createElement('div');
+        feedback.className = `feedback-msg feedback-${tipo}`;
+        
+        const icone = tipo === 'sucesso' ? 'fa-check-circle' : 'fa-exclamation-circle';
+        feedback.innerHTML = `<i class="fas ${icone}"></i> ${mensagem}`;
+        
+        campo.parentNode.appendChild(feedback);
+    }
+
+    // Função para validar campo individual
+    function validarCampo(nomeCampo, valor) {
+        const campo = campos[nomeCampo];
+        let valido = false;
+        let mensagem = '';
+
+        switch(nomeCampo) {
+            case 'nome':
+                valido = valor.trim().length >= 2;
+                mensagem = valido ? 'Nome válido' : 'Nome deve ter pelo menos 2 caracteres';
+                break;
+                
+            case 'email':
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                valido = emailRegex.test(valor);
+                mensagem = valido ? 'Email válido' : 'Email inválido';
+                break;
+                
+            case 'senha':
+                valido = valor.length >= 6;
+                
+                // Verificar força da senha
+                let forca = 0;
+                if (valor.length >= 6) forca++;
+                if (/[A-Z]/.test(valor)) forca++;
+                if (/[0-9]/.test(valor)) forca++;
+                if (/[^A-Za-z0-9]/.test(valor)) forca++;
+                
+                if (valido) {
+                    if (forca <= 1) mensagem = 'Senha fraca - tente adicionar números e caracteres especiais';
+                    else if (forca <= 2) mensagem = 'Senha média - boa!';
+                    else mensagem = 'Senha forte - excelente!';
+                } else {
+                    mensagem = 'Senha deve ter pelo menos 6 caracteres';
+                }
+                
+                // Atualizar indicador de força
+                atualizarForcaSenha(campo, forca, valido);
+                break;
+                
+            case 'confirmarSenha':
+                valido = valor === campos.senha.value && valor.length >= 6;
+                mensagem = valido ? 'Senhas conferem' : 'Senhas não conferem';
+                break;
+        }
+
+        // Aplicar estilos visuais
+        campo.className = campo.className.replace(/campo-(valido|invalido)/g, '');
+        campo.classList.add(valido ? 'campo-valido' : 'campo-invalido');
+
+        // Criar feedback
+        criarFeedback(campo, valido ? 'sucesso' : 'erro', mensagem);
+
+        return valido;
+    }
+
+    // Função para indicador de força da senha
+    function atualizarForcaSenha(campo, forca, valido) {
+        let indicador = campo.parentNode.querySelector('.senha-forca');
+        
+        if (!indicador) {
+            indicador = document.createElement('div');
+            indicador.className = 'senha-forca';
+            campo.parentNode.appendChild(indicador);
+        }
+
+        if (!valido || forca === 0) {
+            indicador.style.display = 'none';
+        } else {
+            indicador.style.display = 'block';
+            indicador.className = 'senha-forca';
+            
+            if (forca <= 1) indicador.classList.add('forca-fraca');
+            else if (forca <= 2) indicador.classList.add('forca-media');
+            else indicador.classList.add('forca-forte');
+        }
+    }
+
+    // Eventos de validação em tempo real
+    Object.keys(campos).forEach(nomeCampo => {
+        const campo = campos[nomeCampo];
+        
+        // Validação ao sair do campo
+        campo.addEventListener('blur', function() {
+            if (this.value.length > 0) {
+                validarCampo(nomeCampo, this.value);
+            }
+        });
+        
+        // Validação durante digitação (com delay)
+        let timeoutId;
+        campo.addEventListener('input', function() {
+            clearTimeout(timeoutId);
+            
+            // Remover classes de validação durante digitação
+            this.className = this.className.replace(/campo-(valido|invalido)/g, '');
+            
+            // Validar após parar de digitar
+            timeoutId = setTimeout(() => {
+                if (this.value.length > 0) {
+                    validarCampo(nomeCampo, this.value);
+                }
+            }, 500);
+        });
+    });
+
+    // Validação especial para confirmação de senha
+    campos.senha.addEventListener('input', function() {
+        if (campos.confirmarSenha.value.length > 0) {
+            setTimeout(() => {
+                validarCampo('confirmarSenha', campos.confirmarSenha.value);
+            }, 500);
+        }
+    });
+
+    // Validação do formulário antes do envio
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Validar todos os campos
+        let todosValidos = true;
+        Object.keys(campos).forEach(nomeCampo => {
+            const valido = validarCampo(nomeCampo, campos[nomeCampo].value);
+            if (!valido) todosValidos = false;
+        });
+
+        // Verificar se todos os campos estão preenchidos
+        Object.keys(campos).forEach(nomeCampo => {
+            if (!campos[nomeCampo].value.trim()) {
+                criarFeedback(campos[nomeCampo], 'erro', 'Este campo é obrigatório');
+                todosValidos = false;
+            }
+        });
+
+        if (todosValidos) {
+            // Mostrar estado de carregamento
+            submitBtn.classList.add('btn-carregando');
+            submitBtn.disabled = true;
+            
+            // Simular delay e enviar
+            setTimeout(() => {
+                form.submit();
+            }, 500);
+        } else {
+            // Focar no primeiro campo inválido
+            const primeiroInvalido = form.querySelector('.campo-invalido');
+            if (primeiroInvalido) {
+                primeiroInvalido.focus();
+                primeiroInvalido.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+    });
+
+    // Prevenir colar senhas diferentes
+    campos.confirmarSenha.addEventListener('paste', function(e) {
+        setTimeout(() => {
+            validarCampo('confirmarSenha', this.value);
+        }, 100);
+    });
+
+    // Dicas de acessibilidade
+    campos.senha.setAttribute('aria-describedby', 'senha-help');
+    const senhaHelp = document.createElement('div');
+    senhaHelp.id = 'senha-help';
+    senhaHelp.style.fontSize = '0.8rem';
+    senhaHelp.style.color = 'var(--text-muted)';
+    senhaHelp.style.marginTop = '0.25rem';
+    senhaHelp.textContent = 'Use pelo menos 6 caracteres com números e símbolos para maior segurança';
+    campos.senha.parentNode.appendChild(senhaHelp);
+
+    // Auto-hide mensagens de sucesso após 5 segundos
+    setTimeout(function() {
+        const mensagensSucesso = document.querySelectorAll('.alert-success, .message.success');
+        mensagensSucesso.forEach(msg => {
+            msg.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            msg.style.opacity = '0';
+            msg.style.transform = 'translateY(-10px)';
+            setTimeout(() => {
+                if (msg.parentNode) {
+                    msg.style.display = 'none';
+                }
+            }, 500);
+        });
+    }, 5000);
+
+    // Melhorar experiência em dispositivos móveis
+    if (window.innerWidth <= 768) {
+        // Ajustar scroll para campos em foco
+        Object.values(campos).forEach(campo => {
+            campo.addEventListener('focus', function() {
+                setTimeout(() => {
+                    this.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 300);
+            });
+        });
+    }
+
+    // Animação de entrada suave para os campos
+    Object.values(campos).forEach((campo, index) => {
+        campo.style.opacity = '0';
+        campo.style.transform = 'translateY(10px)';
+        
+        setTimeout(() => {
+            campo.style.transition = 'all 0.5s ease';
+            campo.style.opacity = '1';
+            campo.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+
+    console.log('✅ Sistema de validação de cadastro carregado com sucesso!');
+});
+</script>
+<%- include('partials/footer') %>

@@ -1,0 +1,140 @@
+<%- include('partials/head', { title: 'Perfil' }) %>
+<%- include('partials/navbar') %>
+
+<div class="container">
+    <%- include('partials/messages') %>
+    
+    <div style="display: grid; gap: 2rem;">
+        <!-- Header do Perfil -->
+        <div class="card animate-fade-in" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));">
+            <div style="text-align: center;">
+                <h2 style="color: var(--text-primary); margin-bottom: 2rem; font-family: 'Playfair Display', serif; font-size: 2.5rem;">
+                    <i class="fas fa-user-cog" style="margin-right: 1rem; color: var(--primary-color);"></i>
+                    Meu Perfil
+                </h2>
+            </div>
+        </div>
+
+        <!-- Seção de Foto de Perfil -->
+        <div class="card animate-slide-in">
+            <h3 style="color: var(--primary-color); margin-bottom: 2rem; display: flex; align-items: center; font-family: 'Playfair Display', serif;">
+                <i class="fas fa-camera" style="margin-right: 0.75rem;"></i>
+                Foto do Perfil
+            </h3>
+            
+            <div style="text-align: center; padding: 2rem; background: linear-gradient(135deg, rgba(79, 172, 254, 0.1), rgba(0, 242, 254, 0.1)); border-radius: 20px;">
+                <% if (typeof user !== 'undefined' && user && user.foto_perfil) { %>
+                    <img src="<%= user.foto_perfil %>" alt="Foto de perfil" 
+                         style="width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 6px solid var(--primary-color); box-shadow: var(--shadow-xl); margin-bottom: 1.5rem;">
+                <% } else { %>
+                    <div style="width: 140px; height: 140px; border-radius: 50%; background: var(--primary-gradient); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white; font-size: 4rem; box-shadow: var(--shadow-xl);">
+                        <i class="fas fa-user"></i>
+                    </div>
+                <% } %>
+                
+                <h4 style="margin-bottom: 0.5rem; color: var(--text-primary); font-size: 1.5rem;"><%= user.nome %></h4>
+                <p style="color: var(--text-muted); margin-bottom: 2rem; font-size: 1.1rem;"><%= user.email %></p>
+                
+                <form action="/upload-foto" method="POST" enctype="multipart/form-data" style="display: inline-block;">
+                    <input type="file" name="foto" accept="image/*" style="display: none;" id="fotoInput">
+                    <label for="fotoInput" class="btn btn-accent" style="cursor: pointer;">
+                        <i class="fas fa-camera"></i>
+                        Alterar Foto do Perfil
+                    </label>
+                    <button type="submit" style="display: none;" id="submitFoto"></button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Seção de Categorias -->
+        <div class="card">
+            <h3 style="color: var(--primary-color); margin-bottom: 2rem; display: flex; align-items: center; font-family: 'Playfair Display', serif;">
+                <i class="fas fa-tags" style="margin-right: 0.75rem;"></i>
+                Categorias de Interesse
+            </h3>
+            
+            <form action="/atualizar-categorias" method="POST">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                    <% categorias.forEach(categoria => { %>
+                        <label class="hover-lift"
+                               style="display: flex; align-items: center; padding: 1.5rem; border: 2px solid <%= categoria.selecionada ? categoria.cor : 'var(--border-color)' %>; border-radius: 16px; cursor: pointer; transition: all 0.3s ease; background: <%= categoria.selecionada ? 'rgba(102, 126, 234, 0.1)' : 'rgba(255, 255, 255, 0.8)' %>;"
+                               onmouseover="this.style.borderColor='<%= categoria.cor %>'; this.style.transform='translateY(-4px)'"
+                               onmouseout="this.style.borderColor='<%= categoria.selecionada ? categoria.cor : 'var(--border-color)' %>'; this.style.transform='translateY(0)'">
+                            
+                            <input type="checkbox" name="categorias" value="<%= categoria.id %>" 
+                                   <%= categoria.selecionada ? 'checked' : '' %>
+                                   style="margin-right: 1rem; transform: scale(1.3); accent-color: <%= categoria.cor %>;">
+                            
+                            <div style="width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 1rem; color: white; font-size: 1.5rem; background: <%= categoria.cor %>;">
+                                <%= categoria.icone %>
+                            </div>
+                            
+                            <div style="flex: 1;">
+                                <h5 style="color: <%= categoria.cor %>; font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem;">
+                                    <%= categoria.nome %>
+                                </h5>
+                                <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">
+                                    <%= categoria.descricao %>
+                                </p>
+                            </div>
+                        </label>
+                    <% }) %>
+                </div>
+                
+                <div style="text-align: center;">
+                    <button type="submit" class="btn btn-primary" style="padding: 16px 40px; font-size: 1.1rem;">
+                        <i class="fas fa-save"></i>
+                        Salvar Preferências
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Ações do Perfil -->
+        <div class="card" style="text-align: center;">
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="/dashboard" class="btn btn-outline">
+                    <i class="fas fa-arrow-left"></i>
+                    Voltar ao Dashboard
+                </a>
+                <a href="/logout" class="btn" style="background: linear-gradient(45deg, #ef4444, #dc2626);">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Sair da Conta
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fotoInput = document.getElementById('fotoInput');
+    const submitFoto = document.getElementById('submitFoto');
+    
+    if (fotoInput) {
+        fotoInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                // Mostrar preview da imagem antes de enviar
+                const file = this.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const existingImg = document.querySelector('img[alt="Foto de perfil"]');
+                    if (existingImg) {
+                        existingImg.src = e.target.result;
+                    }
+                };
+                
+                reader.readAsDataURL(file);
+                
+                // Auto-submit
+                setTimeout(() => {
+                    submitFoto.click();
+                }, 500);
+            }
+        });
+    }
+});
+</script>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,168 @@
+<%- include('partials/head', { title: 'Início' }) %>
+<%- include('partials/navbar') %>
+
+<div class="container">
+    <%- include('partials/messages') %>
+    
+    <!-- Hero Section -->
+    <section class="hero animate-fade-in">
+        <h1 class="hero-title">
+            <span class="logo-icon">📰</span>
+            Portal de Notícias
+        </h1>
+        <p class="hero-subtitle">
+            Suas notícias personalizadas com inteligência e estilo
+        </p>
+        <% if (typeof user === 'undefined' || !user) { %>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
+                <a href="/cadastro" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i>
+                    Começar Agora
+                </a>
+                <a href="/login" class="btn btn-outline">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Entrar
+                </a>
+            </div>
+        <% } %>
+    </section>
+
+    <!-- Notícias Grid -->
+    <section class="main-content animate-slide-in">
+        <% if (noticias && noticias.length > 0) { %>
+            <!-- Notícia Principal (Featured) -->
+            <% if (noticias[0]) { %>
+                <div class="card" style="margin-bottom: 3rem; background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(240,248,255,0.95));">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center;">
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                                <span class="news-category" style="background: <%= noticias[0].categoria_cor %>;">
+                                    <%= noticias[0].categoria_nome %>
+                                </span>
+                                <span style="color: var(--text-muted); font-size: 0.9rem;">
+                                    <i class="fas fa-fire" style="color: #ff6b6b; margin-right: 0.5rem;"></i>
+                                    Destaque
+                                </span>
+                            </div>
+                            <h2 class="news-title" style="font-size: 2rem; margin-bottom: 1rem;">
+                                <%= noticias[0].titulo %>
+                            </h2>
+                            <% if (noticias[0].subtitulo) { %>
+                                <p class="news-subtitle" style="font-size: 1.1rem; margin-bottom: 1.5rem;">
+                                    <%= noticias[0].subtitulo %>
+                                </p>
+                            <% } %>
+                            <div class="news-meta">
+                                <span>
+                                    <i class="far fa-calendar-alt"></i>
+                                    <%= new Date(noticias[0].criado_em).toLocaleDateString('pt-BR') %>
+                                </span>
+                                <span>
+                                    <i class="far fa-eye"></i>
+                                    <%= noticias[0].visualizacoes %> visualizações
+                                </span>
+                            </div>
+                        </div>
+                        <% if (noticias[0].imagem) { %>
+                            <div class="news-card-image" style="border-radius: 16px; overflow: hidden; height: 300px;">
+                                <img src="<%= noticias[0].imagem %>" alt="<%= noticias[0].titulo %>">
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            <% } %>
+
+            <!-- Grid de Notícias -->
+            <div class="news-grid">
+                <% noticias.slice(1).forEach((noticia, index) => { %>
+                    <article class="news-card hover-lift" style="animation-delay: <%= index * 0.1 %>s;">
+                        <% if (noticia.imagem) { %>
+                            <div class="news-card-image">
+                                <img src="<%= noticia.imagem %>" alt="<%= noticia.titulo %>" loading="lazy">
+                            </div>
+                        <% } %>
+                        
+                        <div class="news-card-content">
+                            <% if (noticia.categoria_nome) { %>
+                                <span class="news-category" style="background: <%= noticia.categoria_cor %>;">
+                                    <%= noticia.categoria_nome %>
+                                </span>
+                            <% } %>
+                            
+                            <h3 class="news-title">
+                                <%= noticia.titulo %>
+                            </h3>
+                            
+                            <% if (noticia.subtitulo) { %>
+                                <p class="news-subtitle">
+                                    <%= noticia.subtitulo %>
+                                </p>
+                            <% } %>
+                            
+                            <div class="news-meta">
+                                <span>
+                                    <i class="far fa-calendar-alt"></i>
+                                    <%= new Date(noticia.criado_em).toLocaleDateString('pt-BR') %>
+                                </span>
+                                <span>
+                                    <i class="far fa-eye"></i>
+                                    <%= noticia.visualizacoes %>
+                                </span>
+                            </div>
+                        </div>
+                    </article>
+                <% }) %>
+            </div>
+        <% } else { %>
+            <!-- Estado Vazio Elegante -->
+            <div class="card" style="text-align: center; padding: 4rem 2rem;">
+                <div style="font-size: 4rem; margin-bottom: 1.5rem; opacity: 0.5;">📰</div>
+                <h3 style="color: var(--text-secondary); margin-bottom: 1rem; font-family: 'Playfair Display', serif;">
+                    Nenhuma notícia disponível
+                </h3>
+                <p style="color: var(--text-muted); margin-bottom: 2rem; max-width: 400px; margin-left: auto; margin-right: auto;">
+                    Nosso portal está sendo preparado com as melhores notícias para você. Volte em breve!
+                </p>
+                <% if (typeof user === 'undefined' || !user) { %>
+                    <a href="/cadastro" class="btn btn-primary">
+                        <i class="fas fa-bell"></i>
+                        Seja Notificado
+                    </a>
+                <% } %>
+            </div>
+        <% } %>
+    </section>
+
+    <!-- Features Section -->
+    <% if (typeof user === 'undefined' || !user) { %>
+        <section style="margin-top: 4rem;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                <div class="card hover-lift" style="text-align: center; padding: 2rem;">
+                    <div style="width: 60px; height: 60px; background: var(--accent-gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white; font-size: 1.5rem;">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h4 style="margin-bottom: 1rem; color: var(--text-primary);">Notícias em Tempo Real</h4>
+                    <p style="color: var(--text-muted);">Receba as últimas notícias assim que elas acontecem</p>
+                </div>
+
+                <div class="card hover-lift" style="text-align: center; padding: 2rem;">
+                    <div style="width: 60px; height: 60px; background: var(--secondary-gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white; font-size: 1.5rem;">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h4 style="margin-bottom: 1rem; color: var(--text-primary);">Personalização Total</h4>
+                    <p style="color: var(--text-muted);">Escolha suas categorias favoritas e tenha um feed único</p>
+                </div>
+
+                <div class="card hover-lift" style="text-align: center; padding: 2rem;">
+                    <div style="width: 60px; height: 60px; background: var(--primary-gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white; font-size: 1.5rem;">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4 style="margin-bottom: 1rem; color: var(--text-primary);">Fontes Confiáveis</h4>
+                    <p style="color: var(--text-muted);">Apenas notícias verificadas e de fontes respeitáveis</p>
+                </div>
+            </div>
+        </section>
+    <% } %>
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,230 @@
+<section style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1)); margin-top: 4rem; padding: 3rem 0; backdrop-filter: blur(10px);">
+    <div style="max-width: 1200px; margin: 0 auto; text-align: center; padding: 0 2rem;">
+        <h3 style="color: var(--text-primary); margin-bottom: 1rem; font-family: 'Playfair Display', serif; font-size: 2rem;">
+            Fique por dentro das últimas notícias
+        </h3>
+        <p style="color: var(--text-muted); margin-bottom: 2rem; font-size: 1.1rem;">
+            Receba um resumo diário das principais notícias direto no seu email
+        </p>
+        <% if (typeof user === 'undefined' || !user) { %>
+            <a href="/cadastro" class="btn btn-primary" style="padding: 16px 32px; font-size: 1.1rem;">
+                <i class="fas fa-envelope"></i>
+                Cadastrar-se Agora
+            </a>
+        <% } else { %>
+            <p style="color: var(--primary-color); font-weight: 600;">
+                <i class="fas fa-check-circle"></i>
+                Você já está conectado conosco!
+            </p>
+        <% } %>
+    </div>
+</section>
+
+<!-- Footer Principal -->
+<footer style="background: linear-gradient(135deg, rgba(45, 55, 72, 0.95), rgba(44, 62, 80, 0.95)); color: white; margin-top: 2rem; backdrop-filter: blur(20px);">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 3rem 2rem 1rem;">
+        
+        <!-- Grid do Footer -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; margin-bottom: 2rem;">
+            
+            <!-- Sobre o Portal -->
+            <div>
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
+                    <span style="font-size: 2rem;">📰</span>
+                    <h4 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; margin: 0;">Portal News</h4>
+                </div>
+                <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.6; margin-bottom: 1.5rem;">
+                    Seu portal de notícias personalizado, trazendo as informações mais relevantes do Brasil e do mundo com design moderno e experiência única.
+                </p>
+                <div style="display: flex; gap: 0.75rem;">
+                    <div style="width: 40px; height: 40px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
+                        <i class="fas fa-newspaper" style="color: rgba(255, 255, 255, 0.8);"></i>
+                    </div>
+                    <div>
+                        <strong style="display: block; margin-bottom: 0.25rem;">Notícias Verificadas</strong>
+                        <small style="color: rgba(255, 255, 255, 0.7);">Fontes confiáveis e atualizadas</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Links Rápidos -->
+            <div>
+                <h5 style="margin-bottom: 1.5rem; font-size: 1.2rem; color: white;">Links Rápidos</h5>
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                    <li style="margin-bottom: 0.75rem;">
+                        <a href="/" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s ease; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-home"></i>
+                            Página Inicial
+                        </a>
+                    </li>
+                    <% if (typeof user !== 'undefined' && user) { %>
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="/dashboard" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s ease; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-tachometer-alt"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="/perfil" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s ease; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-user-cog"></i>
+                                Meu Perfil
+                            </a>
+                        </li>
+                    <% } else { %>
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="/login" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s ease; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-sign-in-alt"></i>
+                                Entrar
+                            </a>
+                        </li>
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="/cadastro" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s ease; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-user-plus"></i>
+                                Cadastrar
+                            </a>
+                        </li>
+                    <% } %>
+                </ul>
+            </div>
+            
+            <!-- Categorias -->
+            <div>
+                <h5 style="margin-bottom: 1.5rem; font-size: 1.2rem; color: white;">Categorias</h5>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                    <span style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>⚽</span> Esportes
+                    </span>
+                    <span style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>🏛️</span> Política
+                    </span>
+                    <span style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>💰</span> Finanças
+                    </span>
+                    <span style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>💻</span> Tecnologia
+                    </span>
+                    <span style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>🏥</span> Saúde
+                    </span>
+                    <span style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>🎬</span> Entretenimento
+                    </span>
+                </div>
+            </div>
+            
+            <!-- Contato e Redes Sociais -->
+            <div>
+                <h5 style="margin-bottom: 1.5rem; font-size: 1.2rem; color: white;">Conecte-se Conosco</h5>
+                <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1.5rem;">
+                    Siga-nos nas redes sociais para não perder nenhuma novidade!
+                </p>
+                
+                <!-- Redes Sociais Elegantes -->
+                <div class="social-links" style="justify-content: flex-start; margin-top: 0; gap: 0.75rem;">
+                    <a href="#" class="facebook" style="width: 45px; height: 45px;">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="twitter" style="width: 45px; height: 45px;">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="instagram" style="width: 45px; height: 45px;">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="linkedin" style="width: 45px; height: 45px;">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                </div>
+                
+                <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(255, 255, 255, 0.1); border-radius: 12px; border-left: 4px solid var(--primary-color);">
+                    <small style="color: rgba(255, 255, 255, 0.9); display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-envelope"></i>
+                        contato@portalnews.com.br
+                    </small>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Linha Separadora -->
+        <div style="border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 2rem; margin-top: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                
+                <!-- Copyright -->
+                <div>
+                    <p style="color: rgba(255, 255, 255, 0.7); margin: 0; font-size: 0.9rem;">
+                        © <%= new Date().getFullYear() %> Portal News. Todos os direitos reservados.
+                        <span style="margin-left: 1rem;">Desenvolvido com ❤️ usando Node.js</span>
+                    </p>
+                </div>
+                
+                <!-- Links Legais -->
+                <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                    <a href="#" style="color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.9rem; transition: color 0.3s ease;">
+                        Termos de Uso
+                    </a>
+                    <a href="#" style="color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.9rem; transition: color 0.3s ease;">
+                        Política de Privacidade
+                    </a>
+                    <a href="#" style="color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.9rem; transition: color 0.3s ease;">
+                        Cookies
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Botão Voltar ao Topo -->
+<button id="backToTop" 
+        style="position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: var(--primary-gradient); color: white; border: none; border-radius: 50%; font-size: 1.2rem; cursor: pointer; box-shadow: var(--shadow-lg); opacity: 0; transform: translateY(20px); transition: all 0.3s ease; z-index: 1000;"
+        onclick="scrollToTop()">
+    <i class="fas fa-arrow-up"></i>
+</button>
+
+<!-- JavaScript para Interações do Footer -->
+<script>
+// Botão Voltar ao Topo
+window.addEventListener('scroll', function() {
+    const backToTopBtn = document.getElementById('backToTop');
+    if (window.pageYOffset > 300) {
+        backToTopBtn.style.opacity = '1';
+        backToTopBtn.style.transform = 'translateY(0)';
+    } else {
+        backToTopBtn.style.opacity = '0';
+        backToTopBtn.style.transform = 'translateY(20px)';
+    }
+});
+
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+// Hover effects para links do footer
+document.querySelectorAll('footer a').forEach(link => {
+    link.addEventListener('mouseenter', function() {
+        this.style.color = 'white';
+        this.style.transform = 'translateX(5px)';
+    });
+    
+    link.addEventListener('mouseleave', function() {
+        this.style.color = 'rgba(255, 255, 255, 0.8)';
+        this.style.transform = 'translateX(0)';
+    });
+});
+
+// Efeito de hover nas redes sociais
+document.querySelectorAll('.social-links a').forEach(social => {
+    social.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-4px) scale(1.1)';
+    });
+    
+    social.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0) scale(1)';
+    });
+});
+</script>
+
+</body>
+</html>
